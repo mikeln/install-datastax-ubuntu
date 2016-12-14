@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running install-datastax/bin/dse.sh"
+echo "Running install-datastax/bin/dse.sh dsc21"
 
 cloud_type=$1
 seed_nodes_dns_names=$2

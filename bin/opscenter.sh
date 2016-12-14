@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Running install-datastax/bin/opscenter.sh"
+echo "Running install-datastax/bin/opscenter.sh dsc21"
 
 cloud_type=$1
 seed_nodes_dns_names=$2
