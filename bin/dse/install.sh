@@ -2,13 +2,13 @@
 
 cloud_type=$1
 
-echo "Installing DataStax Community DSC21"
+echo "Installing DataStax Community DDC"
 
 echo "Adding the DataStax repository"
 if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
-  echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+  echo "deb http://debian.datastax.com/datastax-ddc 3.2 main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 else
-  echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+  echo "deb http://debian.datastax.com/datastax-ddc 3.2 main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 fi
 
 #
@@ -22,9 +22,8 @@ curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 apt-get -y update
 
 
-dsc_version=2.1.10
-echo "Running apt-get install dsc $dsc_version"
-apt-get -y install dsc21=$dsc_version-1 cassandra=$dsc_version cassandra-tools=$dsc_version
+echo "Running apt-get install ddc"
+apt-get -y install datastax-ddc
 
 echo "Stopping and clearing default server setup"
 service casssandra stop
