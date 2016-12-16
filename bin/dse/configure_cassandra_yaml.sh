@@ -18,7 +18,7 @@ saved_caches_directory="/mnt/saved_caches"
 phi_convict_threshold=12
 auto_bootstrap="false"
 
-file=/etc/dse/cassandra/cassandra.yaml
+file=/etc/cassandra/cassandra.yaml
 
 date=$(date +%F)
 backup="$file.$date"

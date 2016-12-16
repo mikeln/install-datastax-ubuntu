@@ -38,7 +38,7 @@ cloud_type="$1"
 dc="$2"
 rack=`get_rack $cloud_type`
 
-file=/etc/dse/cassandra/cassandra-rackdc.properties
+file=/etc/cassandra/cassandra-rackdc.properties
 
 date=$(date +%F)
 backup="$file.$date"
