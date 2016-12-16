@@ -22,17 +22,17 @@ curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 apt-get -y update
 
 
-dsc_version=2.1.10-1
+dsc_version=2.1.10
 echo "Running apt-get install dsc $dsc_version"
-apt-get -y install dsc=$dsc_version cassandra=$dsc_version cassandra-tools=$dsc_version
+apt-get -y install dsc21=$dsc_version-1 cassandra=$dsc_version cassandra-tools=$dsc_version
 
 echo "Stopping and clearing default server setup"
 service casssandra stop
 rm -rf /var/lib/cassandra/data/system/*
 
 echo "Running apt-get install datastax-agent"
-opscenter_version=6.0.4
-#opscenter_version=5.2.1
+#opscenter_version=6.0.4
+opscenter_version=5.2.1
 apt-get -y install datastax-agent=$opscenter_version
 
 # The install of dse creates a cassandra user, so now we can do this:
