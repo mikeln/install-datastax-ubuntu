@@ -24,11 +24,18 @@ apt-get -y update
 
 echo "Running apt-get install ddc"
 apt-get -y install datastax-ddc
+apt-get -y install datastax-ddc-tools
 
 echo "Stopping and clearing default server setup"
 service casssandra stop
 rm -rf /var/lib/cassandra/data/system/*
 
+echo "Adding the DataStax repository dsc21"
+if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
+   echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+else
+   echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
+fi
 echo "Running apt-get install datastax-agent"
 #opscenter_version=6.0.4
 opscenter_version=5.2.1
