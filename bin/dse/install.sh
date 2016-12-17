@@ -36,6 +36,8 @@ if [[ $cloud_type == "gce" ]] || [[ $cloud_type == "gke" ]]; then
 else
    echo "deb http://debian.datastax.com/community stable main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list
 fi
+curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
+apt-get -y update
 echo "Running apt-get install datastax-agent"
 #opscenter_version=6.0.4
 opscenter_version=5.2.1
