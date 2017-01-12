@@ -17,6 +17,11 @@ commitlog_directory="/mnt/commitlog"
 saved_caches_directory="/mnt/saved_caches"
 phi_convict_threshold=12
 auto_bootstrap="false"
+#
+# add security
+#
+authenticator="PasswordAuthenticator"
+authorizer="CassandraAuthorizer"
 
 file=/etc/cassandra/cassandra.yaml
 
@@ -36,6 +41,8 @@ cat $file \
 | sed -e "s:.*\(commitlog_directory\:\).*:commitlog_directory\: $commitlog_directory:" \
 | sed -e "s:.*\(saved_caches_directory\:\).*:saved_caches_directory\: $saved_caches_directory:" \
 | sed -e "s:.*\(phi_convict_threshold\:\).*:phi_convict_threshold\: $phi_convict_threshold:" \
+| sed -e "s:.*\(authenticator\:\).*:authenticator\: $authenticator:" \
+| sed -e "s:.*\(authorizer\:\).*:authorizer\: $authorizer:" \
 > $file.new
 
 echo "auto_bootstrap: $auto_bootstrap" >> $file.new
