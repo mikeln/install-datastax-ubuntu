@@ -7,8 +7,8 @@ cass_pass=${3:-cassandra}
 sudo tee config.json > /dev/null <<EOF
 {
   "cassandra": {
-    "seed_hosts": "$seed_node_ip"
-    "username": "$cass_user"
+    "seed_hosts": "$seed_node_ip",
+    "username": "$cass_user",
     "password": "$cass_pass"
   },
   "cassandra_metrics": {},
