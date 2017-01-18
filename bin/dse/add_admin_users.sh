@@ -60,7 +60,7 @@ echo "Added user $admin_user"
 # 
 # TODO: RANDON PASSWORD NEEDED
 echo "Disable Default Admin"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "alter user cassandra with password 'randomcrap093284059507!!!' nosupseruser;"
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "alter user cassandra with password 'randomcrap093284059507!!!' nosuperuser;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to alter default superuser"
     exit 3
@@ -77,7 +77,7 @@ echo "Added user $opscenter_user"
 #
 # grant all on keyspace "OpsCenter" to opscenter;
 echo "granting opscenter"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace "OpsCenter" to $opscenter_user;"
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace \"OpsCenter\" to $opscenter_user;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to set opscenter permissions"
     exit 3
