@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-seed_node_ip=$1
-cass_user=${2:-cassandra}
-cass_pass=${3:-cassandra}
+seed_node_ip=${1?"Missing seed node IP arg 1"}
+cass_user=${2?"Missing user arg 2"}
+cass_pass=${3?"Missing pw arg 3"}
 
 sudo tee config.json > /dev/null <<EOF
 {

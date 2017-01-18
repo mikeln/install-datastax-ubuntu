@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-node_ip=$1
-node_broadcast_ip=$2
-opscenter_ip=$3
+node_ip=${1?"Missing node IP arg 1"}
+node_broadcast_ip=${2?"Missing broadcast IP arg 2"}
+opscenter_ip=${3?"Missing opscenter IP arg 3"}
 # security
-cass_user=${4:-cassandra}
-cass_pass=${5:-cassandra}
-mcass_user=${6:-cassandra}
-mcass_pass=${7:-cassandra}
+cass_user=${4?"Missing user arg 4"}
+cass_pass=${5?"Missing user pw arg 5"}
+mcass_user=${6?"Missing monitor user arg 6"}
+mcass_pass=${7?"Missing monitor pw arg 7"}
 
 # looks like the agent creates an empty /var/lib/datastax-agent/conf/address.yaml when it starts for the first time
 # given that, we're not going to worry about backing it up

@@ -7,6 +7,27 @@ seed_nodes_dns_names=$2
 data_center_name=$3
 opscenter_dns_name=$4
 
+#
+# read passwords off the secret location
+#
+admin_user="king"
+admin_pw=$(</etc/cassandra/foo/AdminPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read admin pw"
+    exit 3
+fi
+opscenter_user="opscenter"
+opscenter_pw=$(</etc/cassandra/foo/OpsCenterPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read opscenter pw"
+    exit 3
+fi
+zonar_user="zonar"
+zonar_pw=$(</etc/cassandra/foo/ZonarPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read zonar pw"
+    exit 3
+fi
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
@@ -74,8 +95,13 @@ sudo apt-get -y install sysstat
 ./dse/install.sh $cloud_type
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
-./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip
-./dse/start.sh
+./dse/start_dse.sh
+# have to lock down the users first then start opscenter
+./dse/add_admin_users.sh $admin_user $admin_pw $opscenter_user $opscenter_pw $zonar_user $zonar_pw
+#
+# now we have the users setup...start agent for opscenter
+./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip $admin_user $admin_pw $admin_user $admin_pw
+./dse/start_agent.sh
 
 # It looks like DSE might be setting the keepalive to 300.  Need to confirm.
 if [[ $cloud_type == "azure" ]]; then

@@ -4,7 +4,27 @@ echo "Running install-datastax/bin/opscenter.sh dsc21"
 
 cloud_type=$1
 seed_nodes_dns_names=$2
-
+#
+# read passwords off the secret location
+#
+admin_user="king"
+admin_pw=$(</etc/cassandra/foo/AdminPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read admin pw"
+    exit 3
+fi
+opscenter_user="opscenter"
+opscenter_pw=$(</etc/cassandra/foo/OpsCenterPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read opscenter pw"
+    exit 3
+fi
+zonar_user="zonar"
+zonar_pw=$(</etc/cassandra/foo/ZonarPassword)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not read zonar pw"
+    exit 3
+fi
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 
@@ -56,7 +76,7 @@ echo "Waiting for OpsCenter to start..."
 sleep 30
 
 echo "Connecting OpsCenter to the cluster..."
-./opscenter/manage_existing_cluster.sh $seed_node_ip
+./opscenter/manage_existing_cluster.sh $seed_node_ip $admin_user $admin_pw 
 
 echo "Changing the keyspace from SimpleStrategy to NetworkTopologyStrategy."
 ./opscenter/configure_opscenter_keyspace.sh
