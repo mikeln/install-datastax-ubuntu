@@ -19,9 +19,24 @@ if [ $? -ne 0 ];then
 fi
 
 echo "Found cqlsh at $CQLSH_CMD"
+
 #
+NODETOOL_CMD=$(which nodetool)
+if [ $? -ne 0 ];then
+    echo "ERROR - could not find nodetool"
+    exit 1
+fi
+
+echo "Found nodetool at $NODETOOL_CMD"
+$NODETOOL_CMD status
+if [ $? -ne 0 ];then
+    echo "ERROR - could not nodetool status"
+    exit 1
+fi
+
 # alter keyspace system_auth with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 3 }
 #
+echo "Altering Replication"
 $CQLSH_CMD -u cassandra -p cassandra -e "alter keyspace system_auth with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 3 };"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to alter replication"
@@ -33,6 +48,7 @@ fi
 #======== new admin and disable old =================
 # 
 # create user king with password 'royal' superuser;
+echo "Changing Admin"
 $CQLSH_CMD -u cassandra -p cassandra -e "create user $admin_user with password '$admin_pw' superuser;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to create new superuser"
@@ -43,6 +59,7 @@ echo "Added user $admin_user"
 # alter user cassandra with password 'randomcrap093284059507!!!' nosupseruser;
 # 
 # TODO: RANDON PASSWORD NEEDED
+echo "Disable Default Admin"
 $CQLSH_CMD -u $admin_user -p $admin_pw -e "alter user cassandra with password 'randomcrap093284059507!!!' nosupseruser;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to alter default superuser"
@@ -50,6 +67,7 @@ if [ $? -ne 0 ];then
 fi
 # 
 # create user opscenter with password 'view0psCenter!!';
+echo "Creating opscenter user"
 $CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $opscenter_user with password '$opscenter_pw';"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to create new opscenter user"
@@ -58,6 +76,7 @@ fi
 echo "Added user $opscenter_user"
 #
 # grant all on keyspace "OpsCenter" to opscenter;
+echo "granting opscenter"
 $CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace "OpsCenter" to $opscenter_user;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to set opscenter permissions"
@@ -65,12 +84,14 @@ if [ $? -ne 0 ];then
 fi
 # 
 # create user zonar with password 'letM3see!?';
+echo "Creating zonar user"
 $CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $zonar_user with password '$zonar_pw';"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to create new zonar user"
     exit 3
 fi
 # grant all on keyspace zonar to zonar;
+echo "granting zonar"
 $CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace zonar to $zonar_user;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to set zonar permissions"
