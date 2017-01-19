@@ -46,10 +46,10 @@ if [ $? -ne 0 ];then
         exit 2
     fi
     echo "Changes appear to be already performed.  Running node repair to clean up (just in case)."
-    $NODETOOL_CMD repair -local
-    if [ $? -ne 0 ];then
-        echo "ERROR - could not nodetool repair -local this node"
-    fi
+#    $NODETOOL_CMD repair -local
+#    if [ $? -ne 0 ];then
+#        echo "ERROR - could not nodetool repair -local this node"
+#    fi
     echo "Exiting script"
     exit 0
 fi
