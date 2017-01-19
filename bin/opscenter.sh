@@ -19,12 +19,6 @@ if [ $? -ne 0 ];then
     echo "ERROR - could not read opscenter pw"
     exit 3
 fi
-zonar_user="zonar"
-zonar_pw=$(</etc/cassandra/foo/ZonarPassword)
-if [ $? -ne 0 ];then
-    echo "ERROR - could not read zonar pw"
-    exit 3
-fi
 # Assuming only one seed is passed in for now
 seed_node_dns_name=$seed_nodes_dns_names
 

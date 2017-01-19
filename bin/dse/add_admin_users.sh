@@ -34,6 +34,26 @@ if [ $? -ne 0 ];then
     exit 1
 fi
 
+#---------------------------------------------
+# determine if these changes have already occured...each node will attempt.   Check for ability to login via default superuser.  If that fails check for new superuser.  IF that fails...then we have a problem.
+echo "Checking if user updates have been performed."
+$CQLSH_CMD -u cassandra -p cassandra -e "list users;"
+if [ $? -ne 0 ];then
+    echo "WARN: Check for user update.  May have been done by another node already.  This is OK."
+    $CQLSH_CMD -u $admin_user -p $admin_pw -e "list users;"
+    if [ $? -ne 0 ];then
+        echo "ERROR: Check for user update.  Can not access with either superuser."
+        exit 2
+    fi
+    echo "Changes appear to be already performed.  Running node repair to clean up (just in case)."
+    $NODETOOL_CMD repair -local
+    if [ $? -ne 0 ];then
+        echo "ERROR - could not nodetool repair -local this node"
+    fi
+    echo "Exiting script"
+    exit 0
+fi
+#---------------------------------------------
 # alter keyspace system_auth with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 3 }
 #
 echo "Altering Replication"
@@ -76,12 +96,12 @@ fi
 echo "Added user $opscenter_user"
 #
 # grant all on keyspace "OpsCenter" to opscenter;
-echo "granting opscenter"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace \"OpsCenter\" to $opscenter_user;"
-if [ $? -ne 0 ];then
-    echo "ERROR: Unable to set opscenter permissions"
-    exit 3
-fi
+#echo "granting opscenter"
+#$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace \"OpsCenter\" to $opscenter_user;"
+#if [ $? -ne 0 ];then
+#    echo "ERROR: Unable to set opscenter permissions"
+#    exit 3
+#fi
 # 
 # create user zonar with password 'letM3see!?';
 echo "Creating zonar user"
@@ -91,12 +111,12 @@ if [ $? -ne 0 ];then
     exit 3
 fi
 # grant all on keyspace zonar to zonar;
-echo "granting zonar"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace zonar to $zonar_user;"
-if [ $? -ne 0 ];then
-    echo "ERROR: Unable to set zonar permissions"
-    exit 3
-fi
+#echo "granting zonar"
+#$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace zonar to $zonar_user;"
+#if [ $? -ne 0 ];then
+#    echo "ERROR: Unable to set zonar permissions"
+#    exit 3
+#fi
 #
 # list users;
 #
@@ -106,10 +126,15 @@ if [ $? -ne 0 ];then
     exit 3
 fi
 # list all permissions;
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "list all permissions;"
-if [ $? -ne 0 ];then
-    echo "ERROR: Unable to list permissions"
-    exit 3
-fi
+#$CQLSH_CMD -u $admin_user -p $admin_pw -e "list all permissions;"
+#if [ $? -ne 0 ];then
+#    echo "ERROR: Unable to list permissions"
+#    exit 3
+#fi
 #
+# do recomended procedure (node repair) after any cahnges of this sort.
+$NODETOOL_CMD repair -local
+if [ $? -ne 0 ];then
+   echo "ERROR - could not nodetool repair -local this node"
+fi
 exit 0
