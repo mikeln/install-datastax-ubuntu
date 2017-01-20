@@ -96,8 +96,8 @@ sudo apt-get -y install sysstat
 ./dse/configure_cassandra_rackdc_properties.sh $cloud_type $data_center_name
 ./dse/configure_cassandra_yaml.sh $node_ip $node_broadcast_ip $seed_node_ip
 ./dse/start_dse.sh
-echo "Waiting for Cassandra to start..."
-sleep 30
+echo "Waiting for Cassandra to start...(datastax recommends 2 min for each node)"
+sleep 120
 # have to lock down the users first then start opscenter
 ./dse/add_admin_users.sh $admin_user $admin_pw $opscenter_user $opscenter_pw $zonar_user $zonar_pw
 #
