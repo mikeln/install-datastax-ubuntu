@@ -41,10 +41,10 @@ fi
 
 #echo ""
 #echo ""
-echo "Node: Decomissioning Node"
-$NODETOOL_CMD decomission
+echo "Node: Decommissioning Node"
+$NODETOOL_CMD decommission
 if [ $? -ne 0 ];then
-    echo "ERROR - could not nodetool decomission the local node"
+    echo "ERROR - could not nodetool decommission the local node"
 fi
 
 # wait a bit... 
@@ -66,7 +66,7 @@ fi
 #    echo "ERROR - could not nodetool removenode the local node"
 #    # try to force it
 #    $NODETOOL_CMD removenode force
-fi
+#fi
 #TODO: should attempt to force if an issue
 echo "Node: Done with node"
 exit 0
