@@ -5,14 +5,14 @@
 NODETOOL_CMD=$(which nodetool)
 if [ $? -ne 0 ];then
     echo "ERROR - could not find nodetool"
-    exit 1
+    exit 3
 fi
 
 echo "Node: Found nodetool at $NODETOOL_CMD"
 $NODETOOL_CMD status
 if [ $? -ne 0 ];then
     echo "ERROR - could not nodetool status"
-    exit 1
+    exit 4
 fi
 
 #---------------------------------------------
@@ -29,18 +29,18 @@ fi
 #          DECOMMISSIONED - issude removenode
 #          CLIENT - ??? just removenode (with no decommission first?)
 #
-echo "Node: Getting status for current node"
+#echo "Node: Getting status for current node"
+#
+#retval=$($NODETOOL_CMD netstats)
+#if [ $? -ne 0 ];then
+#    echo "ERROR - could not local nodetool netstats - will just attempt to removenode"
+#    # TODO: removenode
+#fi
+##TODO: eval
+#echo "Initial: $retval"
 
-retval=$($NODETOOL_CMD netstats)
-if [ $? -ne 0 ];then
-    echo "ERROR - could not local nodetool netstats - will just attempt to removenode"
-    # TODO: removenode
-fi
-#TODO: eval
-echo "Initial: $retval"
-
-echo ""
-echo ""
+#echo ""
+#echo ""
 echo "Node: Decomissioning Node"
 $NODETOOL_CMD decomission
 if [ $? -ne 0 ];then
@@ -48,24 +48,24 @@ if [ $? -ne 0 ];then
 fi
 
 # wait a bit... 
-sleep 30
-
-retval=$($NODETOOL_CMD netstats)
-if [ $? -ne 0 ];then
-    echo "ERROR - could not local nodetool netstats - will just attempt to removenode"
-    # TODO: removenode
-fi
+#sleep 30
+#
+#retval=$($NODETOOL_CMD netstats)
+#if [ $? -ne 0 ];then
+#    echo "ERROR - could not local nodetool netstats - will just attempt to removenode"
+#    # TODO: removenode
+#fi
 #TODO: eval
-echo "After 30 sec: $retval"
-
-echo ""
-echo ""
-echo "Node: Removing Node"
-$NODETOOL_CMD removenode
-if [ $? -ne 0 ];then
-    echo "ERROR - could not nodetool removenode the local node"
-    # try to force it
-    $NODETOOL_CMD removenode force
+#echo "After 30 sec: $retval"
+#
+#echo ""
+#echo ""
+#echo "Node: Removing Node"
+#$NODETOOL_CMD removenode
+#if [ $? -ne 0 ];then
+#    echo "ERROR - could not nodetool removenode the local node"
+#    # try to force it
+#    $NODETOOL_CMD removenode force
 fi
 #TODO: should attempt to force if an issue
 echo "Node: Done with node"
