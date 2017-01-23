@@ -22,10 +22,10 @@ if [ $? -ne 0 ];then
     echo "ERROR - could not read opscenter pw"
     exit 3
 fi
-zonar_user="zonar"
-zonar_pw=$(</etc/cassandra/foo/ZonarPassword)
+workr_user="workr"
+workr_pw=$(</etc/cassandra/foo/WorkrPassword)
 if [ $? -ne 0 ];then
-    echo "ERROR - could not read zonar pw"
+    echo "ERROR - could not read workr pw"
     exit 3
 fi
 # Assuming only one seed is passed in for now
@@ -99,7 +99,7 @@ sudo apt-get -y install sysstat
 echo "Waiting for Cassandra to start...(datastax recommends 2 min for each node)"
 sleep 120
 # have to lock down the users first then start opscenter
-./dse/add_admin_users.sh $admin_user $admin_pw $opscenter_user $opscenter_pw $zonar_user $zonar_pw
+./dse/add_admin_users.sh $admin_user $admin_pw $opscenter_user $opscenter_pw $workr_user $workr_pw
 #
 # now we have the users setup...start agent for opscenter
 ./dse/configure_agent_address_yaml.sh $node_ip $node_broadcast_ip $opscenter_ip $admin_user $admin_pw $admin_user $admin_pw

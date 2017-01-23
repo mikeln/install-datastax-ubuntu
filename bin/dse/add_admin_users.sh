@@ -2,15 +2,15 @@
 #
 # Lock down admin users
 #  - disable the default cassandra user
-#  - create users for admin, opscenter, zonar
+#  - create users for admin, opscenter, workr
 #  - use passwords supplied 
 #
 admin_user=${1?"Missing admin id arg 1"}
 admin_pw=${2?"Missing admin pw arg 2"}
 opscenter_user=${3?"Missing opscenter id arg 3"}
 opscenter_pw=${4?"Missing opscenter pw arg 4"}
-zonar_user=${5?"Missing zonar id arg 5"}
-zonar_pw=${6?"Missing zonar pw arg 6"}
+workr_user=${5?"Missing workr id arg 5"}
+workr_pw=${6?"Missing workr pw arg 6"}
 
 CQLSH_CMD=$(which cqlsh)
 if [ $? -ne 0 ];then
@@ -55,6 +55,7 @@ if [ $? -ne 0 ];then
 fi
 #---------------------------------------------
 # alter keyspace system_auth with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 3 }
+# recommended by Datastax docs.
 #
 echo "Altering Replication"
 $CQLSH_CMD -u cassandra -p cassandra -e "alter keyspace system_auth with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 3 };"
@@ -78,9 +79,9 @@ echo "Added user $admin_user"
 # 
 # alter user cassandra with password 'randomcrap093284059507!!!' nosupseruser;
 # 
-# TODO: RANDON PASSWORD NEEDED
 echo "Disable Default Admin"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "alter user cassandra with password 'randomcrap093284059507!!!' nosuperuser;"
+GEN_PW=$(cat /dev/urandom | base64 | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "alter user cassandra with password '$GEN_PW' nosuperuser;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to alter default superuser"
     exit 3
@@ -103,18 +104,18 @@ echo "Added user $opscenter_user"
 #    exit 3
 #fi
 # 
-# create user zonar with password 'letM3see!?';
-echo "Creating zonar user"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $zonar_user with password '$zonar_pw';"
+# create user workr with password 'letM3see!?';
+echo "Creating workr user"
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $workr_user with password '$workr_pw';"
 if [ $? -ne 0 ];then
-    echo "ERROR: Unable to create new zonar user"
+    echo "ERROR: Unable to create new workr user"
     exit 3
 fi
-# grant all on keyspace zonar to zonar;
-#echo "granting zonar"
-#$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace zonar to $zonar_user;"
+# grant all on keyspace workr to workr;
+#echo "granting workr"
+#$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace workr to $workr_user;"
 #if [ $? -ne 0 ];then
-#    echo "ERROR: Unable to set zonar permissions"
+#    echo "ERROR: Unable to set workr permissions"
 #    exit 3
 #fi
 #
