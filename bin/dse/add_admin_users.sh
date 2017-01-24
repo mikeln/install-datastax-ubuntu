@@ -95,6 +95,22 @@ if [ $? -ne 0 ];then
     exit 3
 fi
 echo "Added user $opscenter_user"
+# 
+# create user workr with password 'letM3see!?';
+echo "Creating workr user"
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $workr_user with password '$workr_pw';"
+if [ $? -ne 0 ];then
+    echo "ERROR: Unable to create new workr user"
+    exit 3
+fi
+#
+# list users;
+#
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "list users;"
+if [ $? -ne 0 ];then
+    echo "ERROR: Unable to list users"
+    exit 3
+fi
 #
 # NOTE: have to create the keyspace first BEFORE we can give rights to it...
 #       ASSUME the opscenter keyspace is "OpsCenter"  (with the quotes)
@@ -113,33 +129,11 @@ if [ $? -ne 0 ];then
     echo "ERROR: Unable to set opscenter permissions"
     exit 3
 fi
-# 
-# create user workr with password 'letM3see!?';
-echo "Creating workr user"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "create user $workr_user with password '$workr_pw';"
-if [ $? -ne 0 ];then
-    echo "ERROR: Unable to create new workr user"
-    exit 3
-fi
 # grant all on keyspace workr to workr;
 #echo "granting workr"
 #$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace workr to $workr_user;"
 #if [ $? -ne 0 ];then
 #    echo "ERROR: Unable to set workr permissions"
-#    exit 3
-#fi
-#
-# list users;
-#
-$CQLSH_CMD -u $admin_user -p $admin_pw -e "list users;"
-if [ $? -ne 0 ];then
-    echo "ERROR: Unable to list users"
-    exit 3
-fi
-# list all permissions;
-#$CQLSH_CMD -u $admin_user -p $admin_pw -e "list all permissions;"
-#if [ $? -ne 0 ];then
-#    echo "ERROR: Unable to list permissions"
 #    exit 3
 #fi
 #
