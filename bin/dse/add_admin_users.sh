@@ -99,16 +99,16 @@ echo "Added user $opscenter_user"
 # NOTE: have to create the keyspace first BEFORE we can give rights to it...
 #       ASSUME the opscenter keyspace is "OpsCenter"  (with the quotes)
 #
-$CQLSH_CMD -u $admin_user -p $admin_pw -e 'create keyspace if not exists \"OpsCenter\";'
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "create keyspace if not exists \"OpsCenter\" with replication = { 'class' : 'NetworkTopologyStrategy', 'dc0' : 2 };"
 if [ $? -ne 0 ];then
-    echo "ERROR: Unable to create new OpsCenter keyspacer"
+    echo "ERROR: Unable to create new OpsCenter keyspace"
     exit 3
 fi
 echo "Added keyspace OpsCenter"
 #
 #grant all on keyspace "OpsCenter" to opscenter;
 #echo "granting opscenter"
-$CQLSH_CMD -u $admin_user -p $admin_pw -e 'grant all on keyspace \"OpsCenter\" to $opscenter_user;'
+$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace \"OpsCenter\" to $opscenter_user;"
 if [ $? -ne 0 ];then
     echo "ERROR: Unable to set opscenter permissions"
     exit 3
