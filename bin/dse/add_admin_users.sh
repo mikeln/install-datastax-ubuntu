@@ -96,13 +96,23 @@ if [ $? -ne 0 ];then
 fi
 echo "Added user $opscenter_user"
 #
-# grant all on keyspace "OpsCenter" to opscenter;
+# NOTE: have to create the keyspace first BEFORE we can give rights to it...
+#       ASSUME the opscenter keyspace is "OpsCenter"  (with the quotes)
+#
+$CQLSH_CMD -u $admin_user -p $admin_pw -e 'create keyspace if not exists \"OpsCenter\";'
+if [ $? -ne 0 ];then
+    echo "ERROR: Unable to create new OpsCenter keyspacer"
+    exit 3
+fi
+echo "Added keyspace OpsCenter"
+#
+#grant all on keyspace "OpsCenter" to opscenter;
 #echo "granting opscenter"
-#$CQLSH_CMD -u $admin_user -p $admin_pw -e "grant all on keyspace \"OpsCenter\" to $opscenter_user;"
-#if [ $? -ne 0 ];then
-#    echo "ERROR: Unable to set opscenter permissions"
-#    exit 3
-#fi
+$CQLSH_CMD -u $admin_user -p $admin_pw -e 'grant all on keyspace \"OpsCenter\" to $opscenter_user;'
+if [ $? -ne 0 ];then
+    echo "ERROR: Unable to set opscenter permissions"
+    exit 3
+fi
 # 
 # create user workr with password 'letM3see!?';
 echo "Creating workr user"
