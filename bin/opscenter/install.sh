@@ -13,4 +13,4 @@ curl -L http://debian.datastax.com/debian/repo_key | sudo apt-key add -
 #
 # opscenter version 6.0.4 (5.2.1)
 apt-get update
-apt-get -y install opscenter=5.2.1
+apt-get -y install opscenter=5.2.5

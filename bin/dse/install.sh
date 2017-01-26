@@ -32,7 +32,7 @@ rm -rf /var/lib/cassandra/data/system/*
 
 echo "Running apt-get install datastax-agent"
 #opscenter_version=6.0.4
-opscenter_version=5.2.1
+opscenter_version=5.2.5
 apt-get -y install datastax-agent=$opscenter_version
 
 # The install of dse creates a cassandra user, so now we can do this:
